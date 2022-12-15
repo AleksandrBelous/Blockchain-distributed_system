@@ -63,7 +63,7 @@ def is_Enough_Money(name, diff_money):
         nonlocal max_hour, max_minute, max_sec
         max_hour, max_minute, max_sec = h, m, s
     
-    res = False
+    res = None
     for file in os.listdir('blocks'):
         with open('blocks/' + file, 'r') as f:
             for line in f:
@@ -81,99 +81,43 @@ def is_Enough_Money(name, diff_money):
                     return h, m, s
                 
                 if action == 'registration' and cur_name == name:
+                    cur_money = int(action_info[3])
                     hour, minute, sec = get_Cur_Time( )
                     # hour >= max_hour and minute >= max_minute and sec > max_sec
                     if hour > max_hour:
                         exchange(hour, minute, sec)
-                        cur_money = int(action_info[3])
                         total_money = cur_money
-                        # if cur_money >= diff_money:
-                        #     res = True
-                        # else:
-                        #     res = False
                     elif hour >= max_hour and minute > max_minute:
                         exchange(hour, minute, sec)
-                        cur_money = int(action_info[3])
                         total_money = cur_money
-                        # if cur_money >= diff_money:
-                        #     res = True
-                        # else:
-                        #     res = False
                     elif hour >= max_hour and minute >= max_minute and sec > max_sec:
                         exchange(hour, minute, sec)
-                        cur_money = int(action_info[3])
                         total_money = cur_money
-                        # if cur_money >= diff_money:
-                        #     res = True
-                        # else:
-                        #     res = False
                 
-                if action == 'transaction' and action_info[2] == name:  # cur_name is sender
+                if (action == 'debiting' or action == 'addition') and cur_name == name:
                     hour, minute, sec = get_Cur_Time( )
-                    # hour >= max_hour and minute >= max_minute and sec > max_sec
+                    cur_money = int(action_info[3])
                     if hour > max_hour:
                         exchange(hour, minute, sec)
-                        # sender loses money
-                        total_money -= int(action_info[4])
-                        # if cur_money >= diff_money:
-                        #     res = True
-                        # else:
-                        #     res = False
+                        total_money += cur_money
                     elif hour >= max_hour and minute > max_minute:
                         exchange(hour, minute, sec)
-                        total_money -= int(action_info[4])
-                        # if cur_money >= diff_money:
-                        #     res = True
-                        # else:
-                        #     res = False
+                        total_money += cur_money
                     elif hour >= max_hour and minute >= max_minute and sec > max_sec:
                         exchange(hour, minute, sec)
-                        total_money -= int(action_info[4])
-                        # if cur_money >= diff_money:
-                        #     res = True
-                        # else:
-                        #     res = False
-                
-                if action == 'transaction' and action_info[3] == name:  # cur_name is recipient
-                    hour, minute, sec = get_Cur_Time( )
-                    # hour >= max_hour and minute >= max_minute and sec > max_sec
-                    if hour > max_hour:
-                        exchange(hour, minute, sec)
-                        # recipient gets money
-                        total_money += int(action_info[4])
-                        # if cur_money >= diff_money:
-                        #     res = True
-                        # else:
-                        #     res = False
-                    elif hour >= max_hour and minute > max_minute:
-                        exchange(hour, minute, sec)
-                        total_money += int(action_info[4])
-                        # if cur_money >= diff_money:
-                        #     res = True
-                        # else:
-                        #     res = False
-                    elif hour >= max_hour and minute >= max_minute and sec > max_sec:
-                        exchange(hour, minute, sec)
-                        total_money += int(action_info[4])
-                        # if cur_money >= diff_money:
-                        #     res = True
-                        # else:
-                        #     res = False
+                        total_money += cur_money
                 
                 if action == 'deleting' and cur_name == name:
                     hour, minute, sec = get_Cur_Time( )
                     if hour > max_hour:
                         exchange(hour, minute, sec)
                         total_money = 0
-                        # res = False
                     elif hour >= max_hour and minute > max_minute:
                         exchange(hour, minute, sec)
                         total_money = 0
-                        # res = False
                     elif hour >= max_hour and minute >= max_minute and sec > max_sec:
                         exchange(hour, minute, sec)
                         total_money = 0
-                        # res = False
     if total_money >= int(diff_money):
         res = True
     else:
