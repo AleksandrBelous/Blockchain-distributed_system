@@ -50,4 +50,4 @@ if __name__ == '__main__':
         elif res == 1:
             continue
     
-    draw(chain = chain)
+    draw()

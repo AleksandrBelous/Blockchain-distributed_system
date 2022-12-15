@@ -15,11 +15,12 @@ def save_new_Action_to_File(lineNumber, blockNumber, action_info):
         f.write('\n')
 
 
-def get_Block_Hash(lineNumber, blockNumber):
+def get_Block_Hash(lineNumber, blockNumber, nonce):
     block_info = ''
     with open('blocks/block' + '-' + str(lineNumber) + '-' + str(blockNumber), 'r') as f:
         for line in f:
             block_info += line
+        block_info += nonce
     block_hash = hashlib.md5(block_info.encode( )).hexdigest( )
     return block_hash
 

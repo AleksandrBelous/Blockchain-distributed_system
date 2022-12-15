@@ -7,6 +7,7 @@ from checkers import *
 from users import names, show_Names
 from memory_pool import pool
 import file_operations
+import block_operations
 
 
 def action_to_String(act_info_second_part):
@@ -51,18 +52,7 @@ def set_NEW_Action(act_info):
         print('we will need to create new block')
     
     if len(cur_block) == 1 + allowed_operations:
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # add NONCE to the end of block
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # create new block within this level
-        pr_hash = file_operations.get_Block_Hash(root[0], root[1])  # (cur_level_idx + 1, cur_block_idx + 1)
-        # root[0] += 1 # shall we change level ?
-        # predict block's number: n=n+1
-        root[1] += 1
-        chain[cur_level_idx].append(create_Block(
-                prev_block_hash = pr_hash,
-                lineNumber = root[0],  # cur_level_idx + 1,
-                blockNumber = root[1]))  # cur_block_idx + 1 + 1))
+        block_operations.add_New_Block()
     
     # fixing the new block number
     cur_block_idx = root[1] - 1  # len(chain[cur_level_idx]) - 1
