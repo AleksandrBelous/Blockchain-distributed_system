@@ -2,7 +2,7 @@
 
 import datetime
 from main import create_Block
-from main_chain import chain, allowed_operations
+from main_chain import chain, allowed_operations, root
 from checkers import *
 from users import names, show_Names
 from memory_pool import pool
@@ -38,35 +38,42 @@ def set_NEW_Action(act_info):
         pool.append(new_line)
     
     # fixing the level, level is const within the func
-    cur_level_idx = len(chain) - 1
+    cur_level_idx = root[0] - 1  # len(chain) - 1
     # fixing the block number
-    cur_block_idx = len(chain[cur_level_idx]) - 1
+    cur_block_idx = root[1] - 1  # len(chain[cur_level_idx]) - 1
     # fixing the block
     cur_block = chain[cur_level_idx][cur_block_idx]
+    
+    # number of unsaved operations
+    unsaved = len(pool)
+    
+    if 1 + allowed_operations - len(cur_block) < unsaved:
+        print('we will need to create new block')
     
     if len(cur_block) == 1 + allowed_operations:
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # add NONCE to the end of block
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # create new block within this level
-        pr_hash = file_operations.get_Block_Hash(cur_level_idx + 1, cur_block_idx + 1)
+        pr_hash = file_operations.get_Block_Hash(root[0], root[1])  # (cur_level_idx + 1, cur_block_idx + 1)
+        # root[0] += 1 # shall we change level ?
+        # predict block's number: n=n+1
+        root[1] += 1
         chain[cur_level_idx].append(create_Block(
                 prev_block_hash = pr_hash,
-                lineNumber = cur_level_idx + 1,
-                # predict block's number: n=n+1
-                blockNumber = cur_block_idx + 1 + 1))
-        # block_number = block_number + 1
+                lineNumber = root[0],  # cur_level_idx + 1,
+                blockNumber = root[1]))  # cur_block_idx + 1 + 1))
     
     # fixing the new block number
-    cur_block_idx = len(chain[cur_level_idx]) - 1
+    cur_block_idx = root[1] - 1  # len(chain[cur_level_idx]) - 1
     # fixing the block
     cur_block = chain[cur_level_idx][cur_block_idx]
-
+    
     # number of unsaved operations
     unsaved = len(pool)
-
+    
     if 1 + allowed_operations - len(cur_block) < unsaved:
-        print('not enough mem')
+        print('not enough memory')
     
     # save new action to block and it's file
     for dict_line in pool:
@@ -77,8 +84,8 @@ def set_NEW_Action(act_info):
         # action_key = pair[0]  # dict_line.keys( )[0]
         # action_value = dict_line[action_key]
         file_operations.save_new_Action_to_File(
-                lineNumber = cur_level_idx + 1,
-                blockNumber = cur_block_idx + 1,
+                lineNumber = root[0],  # cur_level_idx + 1,
+                blockNumber = root[1],  # cur_block_idx + 1,
                 action_info = [action_key, action_value])
 
 
@@ -108,7 +115,7 @@ def choose_Action(act):
             return 1
         transfer_amount = input('Transfer amount: ')
         if not is_Enough_Money(sender, transfer_amount):
-            print(f'The user <{sender}> has not enough money')
+            print(f'The user <{sender}> does not have enough money')
             return 1
         info = ['transaction', sender, recipient, transfer_amount]
         set_NEW_Action(act_info = info)
