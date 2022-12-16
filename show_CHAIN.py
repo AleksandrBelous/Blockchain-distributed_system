@@ -12,3 +12,4 @@ def draw( ):
             for e in chain[i][j]:
                 for k, v in e.items( ):
                     print(k, ':', v)
+    print( )

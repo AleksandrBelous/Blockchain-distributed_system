@@ -37,35 +37,24 @@ def set_NEW_Action(act_info):
         new_line = { 'addition': addition_info }
         pool.append(new_line)
     
+    # for dict_line in pool:
+    #     for i in range(len(chain)):
+    #         for j in range(len(chain[i])):
+    #             cur_block = None
+    #             if len(chain[i][j]) > 0:
+    #                 cur_block = chain[i][j]
+    #             if len(cur_block) < 1 + allowed_operations:
+    #                 print(f'chain[{i}][{j}] is ready')
+    #                 cur_block.append(dict_line)
+    #             elif len(cur_block) == 1 + allowed_operations:
+    #                 cur_block.append({'nonce':'abcdefg'})
+    #
+                    
+    
     # number of unsaved operations
     unsaved = len(pool)
-    print(f'unsaved: {unsaved}')
-    # fixing the root level
-    cur_level_idx = head[0] - 1
-    # fixing the root block number
-    cur_block_idx = head[1] - 1
-    # fixing the block
-    cur_block = chain[cur_level_idx][cur_block_idx]
-    
-    if 1 + allowed_operations - len(cur_block) < unsaved and 1 + allowed_operations != len(cur_block):
-        block_operations.new_Block_in_Line( )
-    
-    # if len(cur_block) == 1 + allowed_operations:
-    #     block_operations.new_Line_and_Block( )
-    #
-    # # fixing the level
-    # cur_level_idx = head[0] - 1
-    # # fixing the new block number
-    # cur_block_idx = head[1] - 1
-    # print(f'chain[{cur_level_idx}][{cur_block_idx}]')
-    # # fixing the block
-    # cur_block = chain[cur_level_idx][cur_block_idx]
-    #
-    # # number of unsaved operations
-    # unsaved = len(pool)
-    #
-    # if 1 + allowed_operations - len(cur_block) < unsaved:
-    #     print('not enough memory')
+
+    # while unsaved!=0:
 
     # fixing the root level
     cur_level_idx = head[0] - 1
@@ -73,7 +62,23 @@ def set_NEW_Action(act_info):
     cur_block_idx = head[1] - 1
     # fixing the block
     cur_block = chain[cur_level_idx][cur_block_idx]
-    
+
+    # if len(cur_block) == 1 + allowed_operations:
+    #     block_operations.new_Line_and_Block( )
+
+    if 1 + allowed_operations != len(cur_block) and 1 + allowed_operations - len(cur_block) < unsaved:
+        print(f'unsaved: {unsaved}')
+        print(f'1 + allowed_operations: {1 + allowed_operations}')
+        print(f'1 + allowed_operations - len(cur_block): {1 + allowed_operations - len(cur_block)}')
+        block_operations.new_Block_in_Line( )
+
+    # fixing the root level
+    cur_level_idx = head[0] - 1
+    # fixing the root block number
+    cur_block_idx = head[1] - 1
+    # fixing the block
+    cur_block = chain[cur_level_idx][cur_block_idx]
+
     if len(cur_block) == 1 + allowed_operations:
         block_operations.new_Line_and_Block( )
 
@@ -83,7 +88,7 @@ def set_NEW_Action(act_info):
     cur_block_idx = head[1] - 1
     # fixing the block
     cur_block = chain[cur_level_idx][cur_block_idx]
-    
+
     # save new action/actions to block and to it's file
     for dict_line in pool:
         cur_block.append(dict_line)
@@ -96,15 +101,13 @@ def set_NEW_Action(act_info):
                 lineNumber = head[0],  # cur_level_idx + 1,
                 blockNumber = head[1],  # cur_block_idx + 1,
                 action_info = [action_key, action_value])
-    
+
     # after new entries we check whether it is necessary to close the block
     if len(cur_block) == 1 + allowed_operations:
         block_operations.new_Line_and_Block( )
 
 
 def choose_Action(act):
-    from show_CHAIN import draw
-    draw()
     if act == '1':
         # user registration
         print('+ + + REGISTRATION + + +')

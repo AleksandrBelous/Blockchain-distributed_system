@@ -31,9 +31,10 @@ if __name__ == '__main__':
     
     head[0] = 1  # last head's level
     head[1] = 1  # last head's block
-
-    tail[0] = 0
-    tail[1] = 0
+    
+    tail[0] = 0  # previous block's level
+    tail[1] = 0  # previous block's number
+    tail[2] = 0  # previous level's free number for block
     
     second_part = actions.action_to_String(act_info_second_part = ['zAbAvA Block-Chain system'])
     file_operations.save_new_Action_to_File(
@@ -42,6 +43,7 @@ if __name__ == '__main__':
             action_info = ['Initial block', second_part])
     
     while True:
+        draw()
         act = input('Action - "1" -- User registration,\n'
                     '       - "2" -- Transaction,\n'
                     '       - "3" -- Deleting a user\n'
@@ -52,5 +54,5 @@ if __name__ == '__main__':
             break
         elif res == 1:
             continue
-    
+    print('====================')
     draw( )
