@@ -1,8 +1,7 @@
 #
 
 import datetime
-from main import create_Block
-from main_chain import chain, allowed_operations, root
+from main_chain import allowed_operations, chain, head
 from checkers import *
 from users import names, show_Names
 from memory_pool import pool
@@ -38,34 +37,54 @@ def set_NEW_Action(act_info):
         new_line = { 'addition': addition_info }
         pool.append(new_line)
     
-    # fixing the level, level is const within the func
-    cur_level_idx = root[0] - 1  # len(chain) - 1
-    # fixing the block number
-    cur_block_idx = root[1] - 1  # len(chain[cur_level_idx]) - 1
+    # number of unsaved operations
+    unsaved = len(pool)
+    print(f'unsaved: {unsaved}')
+    # fixing the root level
+    cur_level_idx = head[0] - 1
+    # fixing the root block number
+    cur_block_idx = head[1] - 1
     # fixing the block
     cur_block = chain[cur_level_idx][cur_block_idx]
     
-    # number of unsaved operations
-    unsaved = len(pool)
+    if 1 + allowed_operations - len(cur_block) < unsaved and 1 + allowed_operations != len(cur_block):
+        block_operations.new_Block_in_Line( )
     
-    if 1 + allowed_operations - len(cur_block) < unsaved:
-        print('we will need to create new block')
+    # if len(cur_block) == 1 + allowed_operations:
+    #     block_operations.new_Line_and_Block( )
+    #
+    # # fixing the level
+    # cur_level_idx = head[0] - 1
+    # # fixing the new block number
+    # cur_block_idx = head[1] - 1
+    # print(f'chain[{cur_level_idx}][{cur_block_idx}]')
+    # # fixing the block
+    # cur_block = chain[cur_level_idx][cur_block_idx]
+    #
+    # # number of unsaved operations
+    # unsaved = len(pool)
+    #
+    # if 1 + allowed_operations - len(cur_block) < unsaved:
+    #     print('not enough memory')
+
+    # fixing the root level
+    cur_level_idx = head[0] - 1
+    # fixing the root block number
+    cur_block_idx = head[1] - 1
+    # fixing the block
+    cur_block = chain[cur_level_idx][cur_block_idx]
     
     if len(cur_block) == 1 + allowed_operations:
-        block_operations.add_New_Block()
-    
-    # fixing the new block number
-    cur_block_idx = root[1] - 1  # len(chain[cur_level_idx]) - 1
+        block_operations.new_Line_and_Block( )
+
+    # fixing the root level
+    cur_level_idx = head[0] - 1
+    # fixing the root block number
+    cur_block_idx = head[1] - 1
     # fixing the block
     cur_block = chain[cur_level_idx][cur_block_idx]
     
-    # number of unsaved operations
-    unsaved = len(pool)
-    
-    if 1 + allowed_operations - len(cur_block) < unsaved:
-        print('not enough memory')
-    
-    # save new action to block and it's file
+    # save new action/actions to block and to it's file
     for dict_line in pool:
         cur_block.append(dict_line)
         action_key = action_value = None
@@ -74,12 +93,18 @@ def set_NEW_Action(act_info):
         # action_key = pair[0]  # dict_line.keys( )[0]
         # action_value = dict_line[action_key]
         file_operations.save_new_Action_to_File(
-                lineNumber = root[0],  # cur_level_idx + 1,
-                blockNumber = root[1],  # cur_block_idx + 1,
+                lineNumber = head[0],  # cur_level_idx + 1,
+                blockNumber = head[1],  # cur_block_idx + 1,
                 action_info = [action_key, action_value])
+    
+    # after new entries we check whether it is necessary to close the block
+    if len(cur_block) == 1 + allowed_operations:
+        block_operations.new_Line_and_Block( )
 
 
 def choose_Action(act):
+    from show_CHAIN import draw
+    draw()
     if act == '1':
         # user registration
         print('+ + + REGISTRATION + + +')

@@ -2,7 +2,7 @@
 import hashlib
 
 from main import create_Block
-from main_chain import chain, root, nonce_requirements
+from main_chain import chain, head, tail, nonce_requirements
 import file_operations
 import string
 import random
@@ -21,45 +21,50 @@ def get_Block_Info(lineNumber, blockNumber):
     return block_info
 
 
-def add_New_Block( ):
-    print('in add_new_block fn')
-    
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # add NONCE to the end of block
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
-    alphabet = '0123456789'
-    pr_hash = None
-    nonce = None
+def get_Nonce( ):
+    nonce = pr_hash = None
     while True:
         nonce = random_String( )
         # make copy of block-file
-        copy = get_Block_Info(root[0], root[1])
+        copy = get_Block_Info(head[0], head[1])
         copy += nonce
-        # with open('tmp', 'w') as tmp:
-        #    tmp.write(copy)
-        # pr_hash = file_operations.get_Block_Hash(root[0], root[1], nonce)
         pr_hash = hashlib.md5(copy.encode( )).hexdigest( )
         if pr_hash.count('0') == nonce_requirements:
-            print(pr_hash)
             # create new block within this level
             last_str = ['nonce', nonce]
-            file_operations.save_new_Action_to_File(root[0], root[1], last_str)
+            file_operations.save_new_Action_to_File(head[0], head[1], last_str)
             break
+    return nonce, pr_hash
+
+
+def new_Line_and_Block( ):
+    """add NONCE to the end of block"""
     
-    # fixing the level
-    cur_level_idx = root[0] - 1
-    # fixing the new block number
-    cur_block_idx = root[1] - 1
+    nonce, pr_hash = get_Nonce( )
+    
+    # fixing the root level
+    cur_level_idx = head[0] - 1
+    # fixing the root block number
+    cur_block_idx = head[1] - 1
     # fixing the block
     cur_block = chain[cur_level_idx][cur_block_idx]
+    
     cur_block.append({ 'nonce': nonce })
     
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # predict block's number: n=n+1
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    root[1] += 1
+    chain.append(list( ))
+    # predict new block's line: x=x+1
+    print(f'will change head[{cur_level_idx}][{cur_block_idx}]')
+    head[0] += 1
+    head[1] = 1
+    # fixing the root level
+    cur_level_idx = head[0] - 1
+    # fixing the root block number
+    print(f'changed to  head[{cur_level_idx}][{cur_block_idx}]')
     chain[cur_level_idx].append(create_Block(
             prev_block_hash = pr_hash,
-            lineNumber = root[0],  # cur_level_idx + 1,
-            blockNumber = root[1]))  # cur_block_idx + 1 + 1))
+            lineNumber = head[0],
+            blockNumber = head[1]))
+
+
+def new_Block_in_Line( ):
+    print('we will need to create new block in line')

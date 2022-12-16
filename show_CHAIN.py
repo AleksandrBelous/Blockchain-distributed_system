@@ -2,7 +2,8 @@
 
 from main_chain import chain
 
-def draw():
+
+def draw( ):
     for i in range(len(chain)):
         print(f'Level {i + 1}')
         for j in range(len(chain[i])):

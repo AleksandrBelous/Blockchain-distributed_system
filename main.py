@@ -4,7 +4,7 @@ import shutil
 
 import actions
 import file_operations
-from main_chain import chain, root
+from main_chain import chain, head, tail
 from show_CHAIN import draw
 
 
@@ -15,8 +15,8 @@ def root_BLock( ):
 def create_Block(prev_block_hash, lineNumber, blockNumber):
     block = list( )
     block.append({ "previous block's hash": prev_block_hash })
-    second_part = actions.action_to_String([prev_block_hash])
-    file_operations.save_new_Action_to_File(lineNumber, blockNumber, ["previous block's hash", second_part])
+    line_second_part = actions.action_to_String([prev_block_hash])
+    file_operations.save_new_Action_to_File(lineNumber, blockNumber, ["previous block's hash", line_second_part])
     return block
 
 
@@ -28,14 +28,17 @@ if __name__ == '__main__':
     
     chain.append(list( ))
     chain[0].append(root_BLock( ))
-  
-    root[0] = 1  # last root's level
-    root[1] = 1  # last root's block
+    
+    head[0] = 1  # last head's level
+    head[1] = 1  # last head's block
+
+    tail[0] = 0
+    tail[1] = 0
     
     second_part = actions.action_to_String(act_info_second_part = ['zAbAvA Block-Chain system'])
     file_operations.save_new_Action_to_File(
-            lineNumber = root[0],
-            blockNumber = root[1],
+            lineNumber = head[0],
+            blockNumber = head[1],
             action_info = ['Initial block', second_part])
     
     while True:
@@ -50,4 +53,4 @@ if __name__ == '__main__':
         elif res == 1:
             continue
     
-    draw()
+    draw( )
