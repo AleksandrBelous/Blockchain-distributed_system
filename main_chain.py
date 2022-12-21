@@ -2,7 +2,7 @@
 
 chain = list( )
 
-allowed_operations = 3
+operations_limit = 3
 
 nonce_requirements = 1
 

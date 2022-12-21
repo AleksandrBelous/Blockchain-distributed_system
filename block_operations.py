@@ -1,41 +1,9 @@
 #
-import hashlib
 
-from main import create_Block
-from main_chain import chain, head, tail, nonce_requirements, allowed_operations
+from main_chain import chain, head, tail, nonce_requirements, operations_limit
 import file_operations
-import string
-import random
+
 from memory_pool import pool
-
-
-def random_String( ):
-    letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for _ in range(6))
-
-
-def get_Block_Info(lineNumber, blockNumber):
-    block_info = ''
-    with open('blocks/block' + '-' + str(lineNumber) + '-' + str(blockNumber), 'r') as f:
-        for line in f:
-            block_info += line
-    return block_info
-
-
-def get_Nonce(blockLevel, blockNumber):
-    nonce = pr_hash = None
-    while True:
-        nonce = random_String( )
-        # make copy of block-file
-        copy = get_Block_Info(blockLevel, blockNumber)
-        copy += nonce
-        pr_hash = hashlib.md5(copy.encode( )).hexdigest( )
-        if pr_hash.count('0') == nonce_requirements:
-            # create new block within this level
-            last_str = ['nonce', nonce]
-            file_operations.save_new_Action_to_File(blockLevel, blockNumber, last_str)
-            break
-    return nonce, pr_hash
 
 
 def new_Line_and_Block( ):
@@ -107,26 +75,16 @@ def new_Block_in_Line( ):
         for k, v in dict_line.items( ):
             action_key, action_value = k, v
         file_operations.save_new_Action_to_File(
-                lineNumber = head[0],
-                blockNumber = new_block_number,
+                lineIdx = head[0],
+                blockIdx = new_block_number,
                 action_info = [action_key, action_value])
-        if len(cur_block) == 1 + allowed_operations:
+        if len(cur_block) == 1 + operations_limit:
             nonce, _ = get_Nonce(blockLevel = head[0], blockNumber = new_block_number)
             cur_block.append({ 'nonce': nonce })
             file_operations.save_new_Action_to_File(
-                    lineNumber = head[0],
-                    blockNumber = new_block_number,
+                    lineIdx = head[0],
+                    blockIdx = new_block_number,
                     action_info = [action_key, action_value])
             pool.clear( )
             break
         # pool.remove(dict_line)
-
-
-def search_Unclosed_Block():
-    for i in range(len(chain)):
-        for j in range(len(chain[i])):
-            cur_block = None
-            if len(chain[i][j]) > 0:
-                cur_block = chain[i][j]
-            if len(cur_block) == 1 + allowed_operations:
-                print('ok')

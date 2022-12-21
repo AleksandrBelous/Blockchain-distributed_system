@@ -1,12 +1,11 @@
 #
-import itertools
-print(int('-100') + int('+100'))
 
-alphabet = '5678901234'
-nonce = ''
-for letter in itertools.product(alphabet, repeat = 4):
-    nonce = ''.join(letter)
-    print(nonce)
+d = list( )
+print(len(d))
+d.append('some')
+print(len(d))
+print(d[len(d)-1])
+
 
 # if action == 'transaction' and action_info[2] == name:  # cur_name is sender
 #     hour, minute, sec = get_Cur_Time( )
