@@ -4,8 +4,10 @@ d = list( )
 print(len(d))
 d.append('some')
 print(len(d))
-print(d[len(d)-1])
+print(d[len(d) - 1])
 
+for i in range(0+1):
+    print('i=', i)
 
 # if action == 'transaction' and action_info[2] == name:  # cur_name is sender
 #     hour, minute, sec = get_Cur_Time( )

@@ -4,8 +4,9 @@ import datetime
 from main_chain import operations_limit, chain, head
 from checkers import *
 from users import names, show_Names
-from memory_pool import pool
+from memory_pool import pool, is_Pool_Empty
 from block_checkers import is_Enough_Space_in_Block, is_Closed_Block
+from block_setters import set_All_New_Actions_to_Block
 import file_operations
 import block_operations
 
@@ -18,10 +19,24 @@ def action_to_String(act_info_second_part):
     return res
 
 
-def save_NEW_Action(leveIdx, blockIdx):
+def find_Place_for_New_Action( ):
+    # fixing the root level
+    cur_level_idx = head[0]
+    # fixing the root block number
+    cur_block_idx = head[1]
+    # num of unsaved actions
     required_space = len(pool)
-    while is_Enough_Space_in_Block(levIdx = leveIdx, blIdx = blockIdx, required_space = required_space):
-        print( )
+    # check if we can add action/actions to current block
+    if is_Enough_Space_in_Block(cur_level_idx, cur_block_idx, required_space):
+        set_All_New_Actions_to_Block(cur_level_idx, cur_block_idx)
+    else:
+        # find blocks that go earlier and remain open
+        for i in range(cur_level_idx + 1):
+            for j in range(cur_block_idx + 1):
+                if is_Enough_Space_in_Block(i, j, required_space = required_space):
+                    set_All_New_Actions_to_Block(i, j)
+    if not is_Pool_Empty( ):
+        find_Place_for_New_Action( )
 
 
 def prepare_NEW_Action(act_info):
@@ -44,15 +59,7 @@ def prepare_NEW_Action(act_info):
         new_line = { 'addition': addition_info }
         pool.append(new_line)
     ####################################################################################################################
-    # fixing the root level
-    cur_level_idx = head[0]
-    # fixing the root block number
-    cur_block_idx = head[1]
-    # fixing the block
-    cur_block = chain[cur_level_idx][cur_block_idx]
-    
-    if not is_Closed_Block(levIdx = cur_level_idx, blIdx = cur_block_idx):
-        save_NEW_Action(cur_level_idx, cur_block_idx)
+    find_Place_for_New_Action( )
     
     # number of unsaved operations
     unsaved = len(pool)
@@ -92,18 +99,6 @@ def prepare_NEW_Action(act_info):
     # fixing the block
     cur_block = chain[cur_level_idx][cur_block_idx]
     
-    # save new action/actions to block and to it's file
-    for dict_line in pool:
-        cur_block.append(dict_line)
-        action_key = action_value = None
-        for k, v in dict_line.items( ):
-            action_key, action_value = k, v
-        # action_key = pair[0]  # dict_line.keys( )[0]
-        # action_value = dict_line[action_key]
-        file_operations.save_new_Action_to_File(
-                lineIdx = head[0],  # cur_level_idx + 1,
-                blockIdx = head[1],  # cur_block_idx + 1,
-                action_info = [action_key, action_value])
     
     # after new entries we check whether it is necessary to close the block
     if len(cur_block) == 1 + operations_limit:

@@ -8,6 +8,8 @@ from actions import action_to_String
 from main_chain import nonce_requirements
 from block_getters import get_Block_Info
 from file_operations import save_new_Action_to_File
+from main_chain import chain
+from memory_pool import pool
 
 
 def set_New_Block(prev_block_hash, lineIdx, blockIdx):
@@ -36,3 +38,18 @@ def set_Nonce_to_Block(levelIdx, blockIdx):
             save_new_Action_to_File(levelIdx, blockIdx, last_str)
             break
     return nonce, pr_hash
+
+
+def set_All_New_Actions_to_Block(levIdx, blockIdx):
+    cur_block = chain[levIdx][blockIdx]
+    # save all new actions to block and to it's file
+    for dict_line in pool:
+        cur_block.append(dict_line)
+        action_key = action_value = None
+        for k, v in dict_line.items( ):
+            action_key, action_value = k, v
+        # save to file
+        save_new_Action_to_File(
+                lineIdx = levIdx,
+                blockIdx = blockIdx,
+                action_info = [action_key, action_value])
