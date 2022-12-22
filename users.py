@@ -1,7 +1,7 @@
 #
 import random
-import datetime
-from actions import prepare_NEW_Action
+from actions import action_to_String_with_Time_Mark
+from memory_pool import pool
 
 names = list( )
 
@@ -14,6 +14,8 @@ def show_Names( ):
 
 def reward_the_Miner( ):
     name = random.choice(names)
-    addition_info = name + ' + 250 ' + str(datetime.datetime.today( ))
-    new_line = { 'addition': addition_info }
-    prepare_NEW_Action(act_info = new_line)
+    act_info = ['addition', name + ' +250']
+    action_key = act_info[0]
+    action_value = action_to_String_with_Time_Mark(act_info_second_part = act_info[1:])
+    new_line = { action_key: action_value }
+    pool.append(new_line)

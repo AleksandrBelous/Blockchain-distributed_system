@@ -10,8 +10,8 @@ def is_Exists_Block(levIdx, blIdx):
         return False
 
 
-def is_Closed_Block(levIdx = chain[0], blIdx = chain[1]):
-    if len(chain[levIdx][blIdx]) == 1 + operations_limit + 1:
+def is_Ready_to_Close_Block(levIdx = chain[0], blIdx = chain[1]):
+    if len(chain[levIdx][blIdx]) == 1 + operations_limit:
         return True
     else:
         return False
