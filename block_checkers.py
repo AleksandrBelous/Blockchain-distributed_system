@@ -1,6 +1,6 @@
 #
 
-from main_chain import chain, operations_limit
+from main_chain import chain, operations_limit, head
 
 
 def is_Exists_Block(levIdx, blIdx):
@@ -10,7 +10,7 @@ def is_Exists_Block(levIdx, blIdx):
         return False
 
 
-def is_Ready_to_Close_Block(levIdx = chain[0], blIdx = chain[1]):
+def is_Ready_to_Close_Block(levIdx = head[0], blIdx = head[1]):
     if len(chain[levIdx][blIdx]) == 1 + operations_limit:
         return True
     else:

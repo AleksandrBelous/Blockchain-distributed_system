@@ -2,11 +2,6 @@
 import os.path
 import shutil
 
-from actions import action_to_String_with_Time_Mark, choose_Action
-from file_operations import save_new_Action_to_File
-from main_chain import chain, head, tail
-from show_CHAIN import draw
-
 
 if __name__ == '__main__':
     
@@ -14,6 +9,8 @@ if __name__ == '__main__':
         shutil.rmtree('blocks')
     
     os.mkdir('blocks')
+    
+    from main_chain import chain, head, tail
     
     chain.append(list( ))
     
@@ -29,12 +26,17 @@ if __name__ == '__main__':
     
     tail[0] = -1  # previous block's level
     tail[1] = 0  # previous block's number
+    from actions import action_to_String_with_Time_Mark, choose_Action
     
     second_part = action_to_String_with_Time_Mark(act_info_second_part = ['zAbAvA Block-Chain system'])
+    from file_operations import save_new_Action_to_File
+    
     save_new_Action_to_File(
             lineIdx = head[0],
             blockIdx = head[1],
             action_info = ['Initial block', second_part])
+    
+    from show_CHAIN import draw
     
     while True:
         draw( )

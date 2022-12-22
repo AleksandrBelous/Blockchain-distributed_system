@@ -1,7 +1,7 @@
 #
 
 import datetime
-from main_chain import head, update_Tail
+from main_chain import chain, head, update_Tail
 from checkers import *
 from users import names, show_Names, reward_the_Miner
 from memory_pool import pool
@@ -22,14 +22,14 @@ def action_to_String_with_Time_Mark(act_info_second_part):
 def find_Place_for_New_Action( ):
     # fixing the root level
     cur_level_idx = head[0]
-    # fixing the root block number
-    cur_block_idx = head[1]
     # num of unsaved actions
     required_space = len(pool)
     # find blocks that go earlier and remain open
     is_found = False
     for i in range(cur_level_idx + 1):
-        for j in range(cur_block_idx + 1):
+        # fixing the block number
+        num_of_blocks = len(chain[i])
+        for j in range(num_of_blocks):
             if is_Enough_Space_in_Block(i, j, required_space = required_space):
                 set_All_New_Actions_to_Block(i, j)
                 if is_Ready_to_Close_Block(i, j):
@@ -38,20 +38,28 @@ def find_Place_for_New_Action( ):
                     reward_the_Miner( )
                     # create new line in chain
                     update_Tail(i, j)
-                    create_New_Level_and_Block(i, j)
+                    create_New_Level_and_Block( )
                 is_found = True
                 break
         if is_found:
             break
+    
     if not is_found:
         # create new block within current level
-        new_block_idx = cur_block_idx + 1
+        new_block_idx = len(chain[cur_level_idx])  # (len(chain[cur_level_idx]) - 1) + 1
         create_New_Block_in_Level(cur_level_idx, new_block_idx)
+        set_All_New_Actions_to_Block(cur_level_idx, new_block_idx)
+        if is_Ready_to_Close_Block(cur_level_idx, new_block_idx):
+            # close current block
+            close_Block(cur_level_idx, new_block_idx)
+            reward_the_Miner( )
+            # create new line in chain
+            update_Tail(cur_level_idx, new_block_idx)
+            create_New_Level_and_Block( )
 
 
 def prepare_NEW_Action(act_info):
     """Will change the chain's block that is <class 'list'>"""
-    ####################################################################################################################
     # add new action
     action_key = act_info[0]
     action_value = action_to_String_with_Time_Mark(act_info_second_part = act_info[1:])
@@ -67,7 +75,7 @@ def prepare_NEW_Action(act_info):
         addition_info = recipient + ' +' + money + ' ' + str(datetime.datetime.today( ))
         new_line = { 'addition': addition_info }
         pool.append(new_line)
-    ####################################################################################################################
+    
     find_Place_for_New_Action( )
 
 

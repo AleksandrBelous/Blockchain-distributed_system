@@ -1,1 +1,5 @@
-Initial block : zAbAvA Block-Chain system 2022-12-16 21:44:14.606822
+previous block's hash : 24e0a1f3dd2af9079bc348c62c6f8d04
+transaction : aleks bob 10 2022-12-23 00:08:25.358935
+debiting : aleks -10 2022-12-23 00:08:25.358935
+addition : bob +10 2022-12-23 00:08:25.358935
+nonce : vckrtu
