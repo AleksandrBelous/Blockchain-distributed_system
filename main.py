@@ -16,7 +16,7 @@ if __name__ == '__main__':
     
     
     def root_BLock( ):
-        return [{ 'Initial block': 'zAbAvA Block-Chain system' }]
+        return [{ 'Initial block': 'my-Block-Chain system' }]
     
     
     chain[0].append(root_BLock( ))
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     tail[1] = 0  # previous block's number
     from actions import action_to_String_with_Time_Mark, choose_Action
     
-    second_part = action_to_String_with_Time_Mark(act_info_second_part = ['zAbAvA Block-Chain system'])
+    second_part = action_to_String_with_Time_Mark(act_info_second_part = ['my-Block-Chain system'])
     from file_operations import save_new_Action_to_File
     
     save_new_Action_to_File(
