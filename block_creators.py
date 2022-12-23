@@ -8,8 +8,8 @@ from file_operations import save_new_Action_to_File
 def create_Block(prev_lev_idx, prev_block_idx, new_lev_idx, new_block_idx):
     block = list( )
     prev_block_hash = get_Block_Hash(prev_lev_idx, prev_block_idx)
-    block.append({ "previous block's hash": prev_block_hash })
-    first_str = ["previous block's hash", prev_block_hash]
+    block.append({ f"previous block-{prev_lev_idx}-{prev_block_idx}'s hash": prev_block_hash })
+    first_str = [f"previous block-{prev_lev_idx}-{prev_block_idx}'s hash", prev_block_hash]
     
     save_new_Action_to_File(new_lev_idx, new_block_idx, first_str)
     return block

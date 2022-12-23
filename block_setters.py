@@ -5,14 +5,14 @@ import random
 import hashlib
 
 
-def set_New_Block(prev_block_hash, lineIdx, blockIdx):
-    block = list( )
-    block.append({ "previous block's hash": prev_block_hash })
-    from actions import action_to_String_with_Time_Mark
-    line_second_part = action_to_String_with_Time_Mark([prev_block_hash])
-    from file_operations import save_new_Action_to_File
-    save_new_Action_to_File(lineIdx, blockIdx, ["previous block's hash", line_second_part])
-    return block
+# def set_New_Block(prev_block_hash, lineIdx, blockIdx):
+#     block = list( )
+#     block.append({ "previous block's hash": prev_block_hash })
+#     from actions import action_to_String_with_Time_Mark
+#     line_second_part = action_to_String_with_Time_Mark([prev_block_hash])
+#     from file_operations import save_new_Action_to_File
+#     save_new_Action_to_File(lineIdx, blockIdx, ["previous block's hash", line_second_part])
+#     return block
 
 
 def set_Nonce_to_Block(levelIdx, blockIdx):
@@ -36,7 +36,6 @@ def set_Nonce_to_Block(levelIdx, blockIdx):
 
 
 def set_All_New_Actions_to_Block(levIdx, blockIdx):
-    print(f'i={levIdx}, j={blockIdx}')
     from main_chain import chain
     cur_block = chain[levIdx][blockIdx]
     # save all new actions to block and to it's file

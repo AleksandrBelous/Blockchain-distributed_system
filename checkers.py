@@ -94,7 +94,7 @@ def is_Enough_Money(name, diff_money):
                         exchange(hour, minute, sec)
                         total_money = cur_money
                 
-                if (action == 'debiting' or action == 'addition') and cur_name == name:
+                if (action == 'debiting' or action == 'addition' or action == 'awarding') and cur_name == name:
                     hour, minute, sec = get_Cur_Time( )
                     cur_money = int(action_info[3])
                     if hour > max_hour:

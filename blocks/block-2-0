@@ -1,3 +1,5 @@
-previous block's hash : 76ece55f4a4bdddaa79a8bd7be353b9a
-addition : aleks +250 2022-12-23 00:08:25.370016
-deleting : tom 2022-12-23 00:09:11.710597
+previous block-1-1's hash : 100a51535809130fa62255947690ff9d
+awarding : bob +250 2022-12-23 16:47:47.127455
+awarding : aleks +250 2022-12-23 16:48:29.724440
+deleting : aleks 2022-12-23 16:49:12.531945
+nonce : bhiica

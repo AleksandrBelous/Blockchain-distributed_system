@@ -25,7 +25,7 @@ def find_Place_for_New_Action( ):
     # num of unsaved actions
     required_space = len(pool)
     # find blocks that go earlier and remain open
-    is_found = False
+    was_found = was_awarded = False
     for i in range(cur_level_idx + 1):
         # fixing the block number
         num_of_blocks = len(chain[i])
@@ -35,16 +35,17 @@ def find_Place_for_New_Action( ):
                 if is_Ready_to_Close_Block(i, j):
                     # close current block
                     close_Block(i, j)
-                    reward_the_Miner( )
+                    was_awarded = reward_the_Miner( )
                     # create new line in chain
-                    update_Tail(i, j)
-                    create_New_Level_and_Block( )
-                is_found = True
+                    if i == head[0] and j == head[1]:
+                        update_Tail(i, j)
+                        create_New_Level_and_Block( )
+                was_found = True
                 break
-        if is_found:
+        if was_found:
             break
     
-    if not is_found:
+    if not was_found:
         # create new block within current level
         new_block_idx = len(chain[cur_level_idx])  # (len(chain[cur_level_idx]) - 1) + 1
         create_New_Block_in_Level(cur_level_idx, new_block_idx)
@@ -52,10 +53,13 @@ def find_Place_for_New_Action( ):
         if is_Ready_to_Close_Block(cur_level_idx, new_block_idx):
             # close current block
             close_Block(cur_level_idx, new_block_idx)
-            reward_the_Miner( )
+            was_awarded = reward_the_Miner( )
             # create new line in chain
             update_Tail(cur_level_idx, new_block_idx)
             create_New_Level_and_Block( )
+    
+    if was_awarded:
+        find_Place_for_New_Action( )
 
 
 def prepare_NEW_Action(act_info):

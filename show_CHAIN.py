@@ -5,11 +5,12 @@ from main_chain import chain
 
 def draw( ):
     for i in range(len(chain)):
-        print(f'\nLevel {i}')
+        print(f'\n========== LEVEL {i} ==========\n')
         for j in range(len(chain[i])):
             print(f'----- BLOCK {i}-{j} -----')
             # show the block
-            for e in chain[i][j]:
+            for n, e in enumerate(chain[i][j]):
                 for k, v in e.items( ):
-                    print(k, ':', v)
-    print( )
+                    print(n, k, ':', v)
+            print()
+    # print( )

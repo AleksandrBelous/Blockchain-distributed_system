@@ -42,7 +42,7 @@ if __name__ == '__main__':
         draw( )
         act = input('Action - "1" -- User registration,\n'
                     '       - "2" -- Transaction,\n'
-                    '       - "3" -- Deleting a user\n'
+                    '       - "3" -- Deleting a user,\n'
                     '       - "4" -- Exit\n'
                     '       ------------------------->: ')
         res = choose_Action(act = act)
