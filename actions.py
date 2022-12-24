@@ -1,14 +1,14 @@
 #
 
 import datetime
-from main_chain import chain, head, update_Tail
+from main_chain import chain, head  # , update_Tail
 from checkers import *
-from users import names, show_Names, reward_the_Miner
+from users import names, show_Names  # , reward_the_Miner
 from memory_pool import pool
-from block_checkers import is_Enough_Space_in_Block, is_Ready_to_Close_Block
+from block_checkers import is_Enough_Space_in_Block, is_Ready_to_Close_Block  # , is_Found_Nonce
 from block_setters import set_All_New_Actions_to_Block
-from block_operations import close_Block
-from block_creators import create_New_Level_and_Block, create_New_Block_in_Level
+from block_operations import grow_Block_Tree  # close_Block
+from block_creators import create_New_Block_in_Level  # create_New_Level_and_Block
 
 
 def action_to_String_with_Time_Mark(act_info_second_part):
@@ -31,17 +31,26 @@ def find_Place_for_New_Action( ):
         num_of_blocks = len(chain[i])
         for j in range(num_of_blocks):
             if is_Enough_Space_in_Block(i, j, required_space = required_space):
-                set_All_New_Actions_to_Block(i, j)
-                if is_Ready_to_Close_Block(i, j):
-                    # close current block
-                    close_Block(i, j)
-                    was_awarded = reward_the_Miner( )
-                    # create new line in chain
-                    if i == head[0] and j == head[1]:
-                        update_Tail(i, j)
-                        create_New_Level_and_Block( )
+                # !!!!!
                 was_found = True
-                break
+                # !!!!!
+                set_All_New_Actions_to_Block(i, j)
+            if is_Ready_to_Close_Block(i, j):
+                was_awarded = grow_Block_Tree(cur_level_idx)
+                # # find nonce, do not close block
+                # new_block_idx = len(chain[cur_level_idx])  # (len(chain[cur_level_idx]) - 1) + 1
+                # create_New_Block_in_Level(cur_level_idx, new_block_idx)
+                # # try to close at least one block in level
+                # smn_nonce_was_found, win_i, win_j, smn_nonce = is_Found_Nonce( )
+                # if smn_nonce_was_found:
+                #     # close win_i, win_j block
+                #     close_Block(win_i, win_j, smn_nonce)
+                #     was_awarded = reward_the_Miner( )
+                #     # create new line in chain
+                #     if win_i == head[0] and win_j == head[1]:
+                #         update_Tail(win_i, win_j)
+                #         create_New_Level_and_Block( )
+            break
         if was_found:
             break
     
@@ -51,12 +60,14 @@ def find_Place_for_New_Action( ):
         create_New_Block_in_Level(cur_level_idx, new_block_idx)
         set_All_New_Actions_to_Block(cur_level_idx, new_block_idx)
         if is_Ready_to_Close_Block(cur_level_idx, new_block_idx):
-            # close current block
-            close_Block(cur_level_idx, new_block_idx)
-            was_awarded = reward_the_Miner( )
-            # create new line in chain
-            update_Tail(cur_level_idx, new_block_idx)
-            create_New_Level_and_Block( )
+            was_awarded = grow_Block_Tree(cur_level_idx)
+            # # close current block
+            # close_Block(cur_level_idx, new_block_idx)
+            # was_awarded = reward_the_Miner( )
+            # # create new line in chain
+            # update_Tail(cur_level_idx, new_block_idx)
+            # create_New_Level_and_Block( )
+            # find nonce, do not close block
     
     if was_awarded:
         find_Place_for_New_Action( )

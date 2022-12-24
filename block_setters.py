@@ -17,11 +17,11 @@ import hashlib
 
 def set_Nonce_to_Block(levelIdx, blockIdx):
     nonce = None
-    
+
     def random_String( ):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for _ in range(6))
-    
+
     while True:
         nonce = random_String( )
         # make copy of block-file
