@@ -1,4 +1,4 @@
-previous block-1-0's hash : 149ac2ad1bc786bf0248703297acbb30
-awarding : aleks +250 2022-12-24 23:53:13.627362
-deleting : alise 2022-12-24 23:55:05.482977
-deleting : bob 2022-12-24 23:57:24.272502
+previous block-1-1's hash : 1c9a53a2db038735de30fc7150c081cc
+transaction : a b 1 2022-12-26 14:29:54.228308
+debiting : a -1 2022-12-26 14:29:54.228308
+addition : b +1 2022-12-26 14:29:54.228308

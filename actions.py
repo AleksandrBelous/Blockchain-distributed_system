@@ -1,7 +1,7 @@
 #
 
 import datetime
-from main_chain import chain, head  # , update_Tail
+from main_chain import chain, head, operations_limit  # , update_Tail
 from checkers import *
 from users import names, show_Names  # , reward_the_Miner
 from memory_pool import pool
@@ -29,14 +29,17 @@ def find_Place_for_New_Action( ):
     for i in range(cur_level_idx + 1):
         # fixing the block number
         num_of_blocks = len(chain[i])
+        print(f'num of block in lev {i} is {num_of_blocks}')
         for j in range(num_of_blocks):
+            print(f'!!! try to put at {i}-{j}, space: {1 + operations_limit - len(chain[i][j])}, need: {required_space}')
             if is_Enough_Space_in_Block(i, j, required_space = required_space):
                 # !!!!!
                 was_found = True
                 # !!!!!
                 set_All_New_Actions_to_Block(i, j)
-            if is_Ready_to_Close_Block(i, j):
-                was_awarded = grow_Block_Tree(cur_level_idx)
+                print(f'success put at {i}-{j}')
+                if is_Ready_to_Close_Block(i, j):
+                    was_awarded = grow_Block_Tree(cur_level_idx)
                 # # find nonce, do not close block
                 # new_block_idx = len(chain[cur_level_idx])  # (len(chain[cur_level_idx]) - 1) + 1
                 # create_New_Block_in_Level(cur_level_idx, new_block_idx)
@@ -57,6 +60,7 @@ def find_Place_for_New_Action( ):
     if not was_found:
         # create new block within current level
         new_block_idx = len(chain[cur_level_idx])  # (len(chain[cur_level_idx]) - 1) + 1
+        print(f'^^^^^ no found => created new in level: {cur_level_idx}-{new_block_idx}')
         create_New_Block_in_Level(cur_level_idx, new_block_idx)
         set_All_New_Actions_to_Block(cur_level_idx, new_block_idx)
         if is_Ready_to_Close_Block(cur_level_idx, new_block_idx):

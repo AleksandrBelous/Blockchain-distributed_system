@@ -1,4 +1,5 @@
-previous block-1-0's hash : 149ac2ad1bc786bf0248703297acbb30
-transaction : bob aleks 20 2022-12-24 23:54:56.029073
-debiting : bob -20 2022-12-24 23:54:56.029073
-addition : aleks +20 2022-12-24 23:54:56.029073
+previous block-1-1's hash : 1c9a53a2db038735de30fc7150c081cc
+transaction : b a 1 2022-12-26 14:30:38.038685
+debiting : b -1 2022-12-26 14:30:38.038685
+addition : a +1 2022-12-26 14:30:38.038685
+nonce : bopqpt

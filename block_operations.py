@@ -3,7 +3,7 @@
 from main_chain import chain, head, update_Tail
 from file_operations import save_new_Action_to_File
 from block_creators import create_New_Level_and_Block, create_New_Block_in_Level
-from block_checkers import is_Found_Nonce
+from block_checkers import is_Found_Nonce, is_atLeast_One_Empty_Block, is_it_was_First_Closed_Block
 from block_setters import set_Nonce_to_Block
 from users import reward_the_Miner
 
@@ -21,8 +21,10 @@ def grow_Block_Tree(cur_level_idx):
     was_awarded = False
     # find nonce, do not close block
     if cur_level_idx != 0:
-        new_block_idx = len(chain[cur_level_idx])  # (len(chain[cur_level_idx]) - 1) + 1
-        create_New_Block_in_Level(cur_level_idx, new_block_idx)
+        if not is_atLeast_One_Empty_Block():
+            new_block_idx = len(chain[cur_level_idx])  # (len(chain[cur_level_idx]) - 1) + 1
+            print(f'%%%% not enough blocks in level, created new one {cur_level_idx}-{new_block_idx}')
+            create_New_Block_in_Level(cur_level_idx, new_block_idx)
         # try to close at least one block in level
         smn_nonce_was_found, win_i, win_j, smn_nonce = is_Found_Nonce( )
         if smn_nonce_was_found:
@@ -30,7 +32,8 @@ def grow_Block_Tree(cur_level_idx):
             close_Block(win_i, win_j, smn_nonce)
             was_awarded = reward_the_Miner( )
             # create new line in chain
-            if win_i == head[0] and win_j == head[1]:
+            # if win_i == head[0] and win_j == head[1]:
+            if is_it_was_First_Closed_Block(win_i):
                 update_Tail(win_i, win_j)
                 create_New_Level_and_Block( )
     else:

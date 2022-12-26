@@ -6,6 +6,21 @@ import hashlib
 from main_chain import chain, operations_limit, head
 
 
+def is_atLeast_One_Empty_Block( ):
+    res = False
+    for i in range(head[0] + 1):
+        lev_size = len(chain[i])
+        for j in range(lev_size):
+            # if len(chain[i][j]) == 1:
+            if 1 + operations_limit - len(chain[i][j]) > 0:
+                print(f'@@@@@ is_atLeast_One_Empty_Block-{i}-{j}')
+                res = True
+                break
+        if res:
+            break
+    return res
+
+
 def is_Closed_Block(levIdx, blIdx):
     if len(chain[levIdx][blIdx]) == 1 + operations_limit + 1:
         return True
@@ -63,9 +78,24 @@ def is_Found_Nonce( ):
             if is_Ready_to_Close_Block(i, j):
                 is_found, nonce = try_to_Find_Nonce(i, j)
                 if is_found:
+                    print(f'####### try to close {i}-{j}: success')
                     win_i = i
                     win_j = j
                     break
+                else:
+                    print(f'####### try to close {i}-{j}: failed')
         if is_found:
             break
     return is_found, win_i, win_j, nonce
+
+
+def is_it_was_First_Closed_Block(win_i):
+    count = 0
+    lev_size = len(chain[win_i])
+    for j in range(lev_size):
+        if is_Closed_Block(win_i, j):
+            count += 1
+    if count == 1:
+        return True
+    else:
+        return False

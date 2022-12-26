@@ -1,5 +1,5 @@
-previous block-0-0's hash : dfd8e867f08ace2d1b87dee22ceeb292
-transaction : aleks bob 10 2022-12-24 23:51:32.985877
-debiting : aleks -10 2022-12-24 23:51:32.985877
-addition : bob +10 2022-12-24 23:51:32.985877
-nonce : olyqhb
+previous block-0-0's hash : ee03b5d5e8dd85938c317058edd72bd2
+transaction : a b 1 2022-12-26 14:25:04.605445
+debiting : a -1 2022-12-26 14:25:04.605445
+addition : b +1 2022-12-26 14:25:04.605445
+nonce : deiznw
