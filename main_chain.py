@@ -4,7 +4,7 @@ chain = list( )
 
 operations_limit = 3
 
-nonce_requirements = 1
+nonce_requirements = 3
 
 # tail->head is pwd through the main blocks
 

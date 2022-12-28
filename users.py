@@ -1,5 +1,6 @@
 #
 import random
+import time
 
 names = list( )
 
@@ -11,6 +12,7 @@ def show_Names( ):
 
 
 def reward_the_Miner( ):
+    print('( in reward_the_Miner fn...')
     name = random.choice(names)
     act_info = ['awarding', name + ' +250']
     action_key = act_info[0]
@@ -19,4 +21,7 @@ def reward_the_Miner( ):
     new_line = { action_key: action_value }
     from memory_pool import pool
     pool.append(new_line)
+    print('pool was appended')
+    print('...out of in reward_the_Miner fn )')
+    time.sleep(secs = 1)
     return True

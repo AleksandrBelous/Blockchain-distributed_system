@@ -1,2 +1,5 @@
-previous block-2-1's hash : 7b0faedd7704a0870ae830eb33c4ac4a
-awarding : c +250 2022-12-26 14:30:38.058632
+previous block-2-0's hash : 77e17a912730c2a9ebc3f637ecd0b273
+debiting : a -1 2022-12-28 19:48:47.770259
+addition : b +1 2022-12-28 19:48:47.770259
+awarding : a +250 2022-12-28 19:48:47.782226
+nonce : wdmxle

@@ -4,9 +4,9 @@ import datetime
 from main_chain import chain, head, operations_limit  # , update_Tail
 from checkers import *
 from users import names, show_Names  # , reward_the_Miner
-from memory_pool import pool
+from memory_pool import pool, show_Pool
 from block_checkers import is_Enough_Space_in_Block, is_Ready_to_Close_Block  # , is_Found_Nonce
-from block_setters import set_All_New_Actions_to_Block
+# from block_setters import set_All_New_Actions_to_Block
 from block_operations import grow_Block_Tree  # close_Block
 from block_creators import create_New_Block_in_Level  # create_New_Level_and_Block
 
@@ -20,10 +20,11 @@ def action_to_String_with_Time_Mark(act_info_second_part):
 
 
 def find_Place_for_New_Action( ):
+    print('( in find_Place_for_New_Action fn...')
     # fixing the root level
     cur_level_idx = head[0]
     # num of unsaved actions
-    required_space = len(pool)
+    required_space = 1  # len(pool)
     # find blocks that go earlier and remain open
     was_found = was_awarded = False
     for i in range(cur_level_idx + 1):
@@ -31,38 +32,83 @@ def find_Place_for_New_Action( ):
         num_of_blocks = len(chain[i])
         print(f'num of block in lev {i} is {num_of_blocks}')
         for j in range(num_of_blocks):
-            print(f'!!! try to put at {i}-{j}, space: {1 + operations_limit - len(chain[i][j])}, need: {required_space}')
+            print(f'try to put at {i}-{j}, space: {1 + operations_limit - len(chain[i][j])}, need: {required_space}')
             if is_Enough_Space_in_Block(i, j, required_space = required_space):
-                # !!!!!
                 was_found = True
-                # !!!!!
-                set_All_New_Actions_to_Block(i, j)
+                # alternative
+                # put here
+                #
+                cur_block = chain[i][j]
+                # count = 0
+                # for dict_line in pool:
+                while True:
+                    if len(pool) == 0:
+                        break
+                    show_Pool( )
+                    dict_line = pool[0]
+                    cur_block.append(dict_line)
+                    # count += 1
+                    print(f'puts {dict_line}')
+                    action_key = action_value = None
+                    for k, v in dict_line.items( ):
+                        action_key, action_value = k, v
+                    # save to file
+                    from file_operations import save_new_Action_to_File
+                    save_new_Action_to_File(
+                            lineIdx = i,
+                            blockIdx = j,
+                            action_info = [action_key, action_value])
+                    pool.pop(0)
+                    if not is_Enough_Space_in_Block(i, j, 1) or len(pool) == 0:
+                        break
+                # for a in range(count):
+                #     pool.pop(a)
                 print(f'success put at {i}-{j}')
                 if is_Ready_to_Close_Block(i, j):
                     was_awarded = grow_Block_Tree(cur_level_idx)
-                # # find nonce, do not close block
-                # new_block_idx = len(chain[cur_level_idx])  # (len(chain[cur_level_idx]) - 1) + 1
-                # create_New_Block_in_Level(cur_level_idx, new_block_idx)
-                # # try to close at least one block in level
-                # smn_nonce_was_found, win_i, win_j, smn_nonce = is_Found_Nonce( )
-                # if smn_nonce_was_found:
-                #     # close win_i, win_j block
-                #     close_Block(win_i, win_j, smn_nonce)
-                #     was_awarded = reward_the_Miner( )
-                #     # create new line in chain
-                #     if win_i == head[0] and win_j == head[1]:
-                #         update_Tail(win_i, win_j)
-                #         create_New_Level_and_Block( )
-            break
-        if was_found:
-            break
+        #         # alternative
+        #         # !!!!!
+        #         was_found = True
+        #         # !!!!!
+        #         set_All_New_Actions_to_Block(i, j)
+        #         print(f'success put at {i}-{j}')
+        #         if is_Ready_to_Close_Block(i, j):
+        #             was_awarded = grow_Block_Tree(cur_level_idx)
+        #     break
+        # if was_found:
+        #     break
     
     if not was_found:
         # create new block within current level
         new_block_idx = len(chain[cur_level_idx])  # (len(chain[cur_level_idx]) - 1) + 1
-        print(f'^^^^^ no found => created new in level: {cur_level_idx}-{new_block_idx}')
+        print(f'no empty block was found => created new block in level: {cur_level_idx}-{new_block_idx}')
         create_New_Block_in_Level(cur_level_idx, new_block_idx)
-        set_All_New_Actions_to_Block(cur_level_idx, new_block_idx)
+        # alternative
+        cur_block = chain[cur_level_idx][new_block_idx]
+        # count = 0
+        # for dict_line in pool:
+        while True:
+            if len(pool) == 0:
+                break
+            show_Pool( )
+            dict_line = pool[0]
+            cur_block.append(dict_line)
+            # count += 1
+            action_key = action_value = None
+            for k, v in dict_line.items( ):
+                action_key, action_value = k, v
+            # save to file
+            from file_operations import save_new_Action_to_File
+            save_new_Action_to_File(
+                    lineIdx = cur_level_idx,
+                    blockIdx = new_block_idx,
+                    action_info = [action_key, action_value])
+            pool.pop(0)
+            if not is_Enough_Space_in_Block(cur_level_idx, new_block_idx, 1) or len(pool) == 0:
+                break
+        # for i in range(count):
+        #     pool.pop(i)
+        # set_All_New_Actions_to_Block(cur_level_idx, new_block_idx)
         if is_Ready_to_Close_Block(cur_level_idx, new_block_idx):
             was_awarded = grow_Block_Tree(cur_level_idx)
             # # close current block
@@ -73,8 +119,10 @@ def find_Place_for_New_Action( ):
             # create_New_Level_and_Block( )
             # find nonce, do not close block
     
-    if was_awarded:
+    if was_awarded or len(pool) != 0:
         find_Place_for_New_Action( )
+    print('...out of find_Place_for_New_Action fn )')
+    show_Pool( )
 
 
 def prepare_NEW_Action(act_info):

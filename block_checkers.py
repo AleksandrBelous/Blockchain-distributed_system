@@ -6,18 +6,20 @@ import hashlib
 from main_chain import chain, operations_limit, head
 
 
-def is_atLeast_One_Empty_Block( ):
+def is_at_Least_One_Empty_Block( ):
+    print('( in is_at_Least_One_Empty_Block fn...')
     res = False
     for i in range(head[0] + 1):
         lev_size = len(chain[i])
         for j in range(lev_size):
             # if len(chain[i][j]) == 1:
             if 1 + operations_limit - len(chain[i][j]) > 0:
-                print(f'@@@@@ is_atLeast_One_Empty_Block-{i}-{j}')
+                print(f'found already one empty block: block-{i}-{j}')
                 res = True
                 break
         if res:
             break
+    print('...out of is_at_Least_One_Empty_Block fn )')
     return res
 
 
@@ -37,6 +39,13 @@ def is_Exists_Block(levIdx, blIdx):
 
 def is_Ready_to_Close_Block(levIdx = head[0], blIdx = head[1]):
     if len(chain[levIdx][blIdx]) == 1 + operations_limit:
+        return True
+    else:
+        return False
+
+
+def is_Enough_Space_in_Block_v0(levIdx, blIdx, required_space):
+    if 1 + operations_limit - len(chain[levIdx][blIdx]) >= required_space:
         return True
     else:
         return False
@@ -70,6 +79,7 @@ def try_to_Find_Nonce(levelIdx, blockIdx):
 
 
 def is_Found_Nonce( ):
+    print('( in is_Found_Nonce fn...')
     is_found = nonce = None
     win_i = win_j = None
     for i in range(head[0] + 1):
@@ -78,14 +88,15 @@ def is_Found_Nonce( ):
             if is_Ready_to_Close_Block(i, j):
                 is_found, nonce = try_to_Find_Nonce(i, j)
                 if is_found:
-                    print(f'####### try to close {i}-{j}: success')
+                    print(f'try to close {i}-{j}: success')
                     win_i = i
                     win_j = j
                     break
                 else:
-                    print(f'####### try to close {i}-{j}: failed')
+                    print(f'try to close {i}-{j}: failed')
         if is_found:
             break
+    print('...out of is_Found_Nonce fn )')
     return is_found, win_i, win_j, nonce
 
 
