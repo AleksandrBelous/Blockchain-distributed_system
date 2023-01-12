@@ -17,6 +17,9 @@ import hashlib
 
 def set_Nonce_to_Block(levelIdx, blockIdx):
     nonce = None
+    # make copy of block-file
+    from block_getters import get_Block_Info
+    copy_block_info = get_Block_Info(levelIdx, blockIdx)
     
     def random_String():
         letters = string.ascii_lowercase
@@ -24,9 +27,6 @@ def set_Nonce_to_Block(levelIdx, blockIdx):
     
     while True:
         nonce = random_String()
-        # make copy of block-file
-        from block_getters import get_Block_Info
-        copy_block_info = get_Block_Info(levelIdx, blockIdx)
         copy_block_info += nonce
         pr_hash = hashlib.md5(copy_block_info.encode()).hexdigest()
         from main_chain import nonce_requirements
@@ -35,23 +35,23 @@ def set_Nonce_to_Block(levelIdx, blockIdx):
     return nonce
 
 
-def set_All_New_Actions_to_Block(levIdx, blockIdx):
-    from main_chain import chain
-    cur_block = chain[levIdx][blockIdx]
-    # save all new actions to block and to it's file
-    from memory_pool import pool_queue
-    for dict_line in pool_queue:
-        cur_block.append(dict_line)
-        action_key = action_value = None
-        for k, v in dict_line.items():
-            action_key, action_value = k, v
-        # save to file
-        from file_operations import save_new_Action_to_File
-        save_new_Action_to_File(
-                lineIdx=levIdx,
-                blockIdx=blockIdx,
-                action_info=[action_key, action_value])
-    pool_queue.clear()
+# def set_All_New_Actions_to_Block(levIdx, blockIdx):
+#     from main_chain import chain
+#     cur_block = chain[levIdx][blockIdx]
+#     # save all new actions to block and to it's file
+#     from memory_pool import pool_queue
+#     for dict_line in pool_queue:
+#         cur_block.append(dict_line)
+#         action_key = action_value = None
+#         for k, v in dict_line.items():
+#             action_key, action_value = k, v
+#         # save to file
+#         from file_operations import save_new_Action_to_File
+#         save_new_Action_to_File(
+#                 lineIdx=levIdx,
+#                 blockIdx=blockIdx,
+#                 action_info=[action_key, action_value])
+#     pool_queue.clear()
 
 
 # def set_One_New_Action(levIdx, blockIdx):
