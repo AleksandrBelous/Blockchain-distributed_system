@@ -6,7 +6,7 @@ import hashlib
 from main_chain import chain, operations_limit, head
 
 
-def is_at_Least_One_Empty_Block( ):
+def is_at_Least_One_Empty_Block():
     print('( in is_at_Least_One_Empty_Block fn...')
     res = False
     for i in range(head[0] + 1):
@@ -62,23 +62,23 @@ def try_to_Find_Nonce(levelIdx, blockIdx):
     nonce = None
     was_found = False
     
-    def random_String( ):
+    def random_String():
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for _ in range(6))
     
-    nonce = random_String( )
+    nonce = random_String()
     # make copy of block-file
     from block_getters import get_Block_Info
     copy_block_info = get_Block_Info(levelIdx, blockIdx)
     copy_block_info += nonce
-    pr_hash = hashlib.md5(copy_block_info.encode( )).hexdigest( )
+    pr_hash = hashlib.md5(copy_block_info.encode()).hexdigest()
     from main_chain import nonce_requirements
     if pr_hash.count('0') == nonce_requirements:
         was_found = True
     return was_found, nonce
 
 
-def is_Found_Nonce( ):
+def is_Found_Nonce():
     print('( in is_Found_Nonce fn...')
     is_found = nonce = None
     win_i = win_j = None

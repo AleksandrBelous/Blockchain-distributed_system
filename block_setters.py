@@ -17,18 +17,18 @@ import hashlib
 
 def set_Nonce_to_Block(levelIdx, blockIdx):
     nonce = None
-
-    def random_String( ):
+    
+    def random_String():
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for _ in range(6))
-
+    
     while True:
-        nonce = random_String( )
+        nonce = random_String()
         # make copy of block-file
         from block_getters import get_Block_Info
         copy_block_info = get_Block_Info(levelIdx, blockIdx)
         copy_block_info += nonce
-        pr_hash = hashlib.md5(copy_block_info.encode( )).hexdigest( )
+        pr_hash = hashlib.md5(copy_block_info.encode()).hexdigest()
         from main_chain import nonce_requirements
         if pr_hash.count('0') == nonce_requirements:
             break
@@ -39,19 +39,19 @@ def set_All_New_Actions_to_Block(levIdx, blockIdx):
     from main_chain import chain
     cur_block = chain[levIdx][blockIdx]
     # save all new actions to block and to it's file
-    from memory_pool import pool
-    for dict_line in pool:
+    from memory_pool import pool_queue
+    for dict_line in pool_queue:
         cur_block.append(dict_line)
         action_key = action_value = None
-        for k, v in dict_line.items( ):
+        for k, v in dict_line.items():
             action_key, action_value = k, v
         # save to file
         from file_operations import save_new_Action_to_File
         save_new_Action_to_File(
-                lineIdx = levIdx,
-                blockIdx = blockIdx,
-                action_info = [action_key, action_value])
-    pool.clear( )
+                lineIdx=levIdx,
+                blockIdx=blockIdx,
+                action_info=[action_key, action_value])
+    pool_queue.clear()
 
 
 # def set_One_New_Action(levIdx, blockIdx):

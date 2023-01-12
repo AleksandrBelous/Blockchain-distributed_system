@@ -6,7 +6,7 @@ import time
 from main_chain import chain, head, operations_limit  # , update_Tail
 from checkers import *
 from users import names, show_Names  # , reward_the_Miner
-from memory_pool import pool, show_Pool
+from memory_pool import pool_queue, show_Pool
 from block_checkers import is_Enough_Space_in_Block, is_Ready_to_Close_Block  # , is_Found_Nonce
 # from block_setters import set_All_New_Actions_to_Block
 from block_operations import grow_Block_Tree  # close_Block
@@ -44,10 +44,10 @@ def find_Place_for_New_Action():
                 # count = 0
                 # for dict_line in pool:
                 while True:
-                    if len(pool) == 0:
+                    if len(pool_queue) == 0:
                         break
                     show_Pool()
-                    dict_line = pool[0]
+                    dict_line = pool_queue[0]
                     cur_block.append(dict_line)
                     # count += 1
                     print(f'puts {dict_line}')
@@ -60,8 +60,8 @@ def find_Place_for_New_Action():
                             lineIdx=i,
                             blockIdx=j,
                             action_info=[action_key, action_value])
-                    pool.pop(0)
-                    if not is_Enough_Space_in_Block(i, j, 1) or len(pool) == 0:
+                    pool_queue.pop(0)
+                    if not is_Enough_Space_in_Block(i, j, 1) or len(pool_queue) == 0:
                         break
                 # for a in range(count):
                 #     pool.pop(a)
@@ -90,10 +90,10 @@ def find_Place_for_New_Action():
         # count = 0
         # for dict_line in pool:
         while True:
-            if len(pool) == 0:
+            if len(pool_queue) == 0:
                 break
             show_Pool()
-            dict_line = pool[0]
+            dict_line = pool_queue[0]
             cur_block.append(dict_line)
             # count += 1
             action_key = action_value = None
@@ -105,8 +105,8 @@ def find_Place_for_New_Action():
                     lineIdx=cur_level_idx,
                     blockIdx=new_block_idx,
                     action_info=[action_key, action_value])
-            pool.pop(0)
-            if not is_Enough_Space_in_Block(cur_level_idx, new_block_idx, 1) or len(pool) == 0:
+            pool_queue.pop(0)
+            if not is_Enough_Space_in_Block(cur_level_idx, new_block_idx, 1) or len(pool_queue) == 0:
                 break
         # for i in range(count):
         #     pool.pop(i)
@@ -121,7 +121,7 @@ def find_Place_for_New_Action():
             # create_New_Level_and_Block( )
             # find nonce, do not close block
     
-    if was_awarded or len(pool) != 0:
+    if was_awarded or len(pool_queue) != 0:
         find_Place_for_New_Action()
     print('...out of find_Place_for_New_Action fn )')
     show_Pool()
@@ -133,28 +133,38 @@ def prepare_NEW_Action(act_info):
     action_key = act_info[0]
     action_value = action_to_String_with_Time_Mark(act_info_second_part=act_info[1:])
     new_line = {action_key: action_value}
-    pool.append(new_line)
+    pool_queue.append(new_line)
     # addition if action is transaction
     if action_key == 'transaction':
         info = action_value.split(sep=' ')
         sender, recipient, money = info[0], info[1], info[2]
         debiting_info = sender + ' -' + money + ' ' + str(datetime.datetime.today())
         new_line = {'debiting': debiting_info}
-        pool.append(new_line)
+        pool_queue.append(new_line)
         addition_info = recipient + ' +' + money + ' ' + str(datetime.datetime.today())
         new_line = {'addition': addition_info}
-        pool.append(new_line)
-    
+        pool_queue.append(new_line)
+    # ready to clean the memory pool :)
+    find_Place_for_New_Action()
+
+
+def prepare_NEW_Actions():
+    from random import randint
+    for i in range(randint(1, operations_limit)):
+        act_info = ['action', f'information-{i + 1}']
+        # add new action
+        action_key = act_info[0]
+        action_value = action_to_String_with_Time_Mark(act_info_second_part=act_info[1:])
+        new_line = {action_key: action_value}
+        pool_queue.append(new_line)
+        # ready to clean the memory pool :)
     find_Place_for_New_Action()
 
 
 def choose_Action(act):
     if act == '0':
         # auto action
-        from random import randint
-        for i in range(randint(1, operations_limit)):
-            info = ['action', f'information {i + 1}']
-            prepare_NEW_Action(act_info=info)
+        prepare_NEW_Actions()
     elif act == '1':
         # user registration
         print('+ + + REGISTRATION + + +')

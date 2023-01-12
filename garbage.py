@@ -1,12 +1,10 @@
 #
 
-test = dict( )
+test = dict()
 
 test['a'] = 'act'
 test['b'] = 'act2'
 
-for d in test:
-    for k, v in d.it
 # if action == 'transaction' and action_info[2] == name:  # cur_name is sender
 #     hour, minute, sec = get_Cur_Time( )
 #     # hour >= max_hour and minute >= max_minute and sec > max_sec

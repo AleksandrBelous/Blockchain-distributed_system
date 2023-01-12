@@ -19,8 +19,8 @@ def reward_the_Miner():
     from actions import action_to_String_with_Time_Mark
     action_value = action_to_String_with_Time_Mark(act_info_second_part=act_info[1:])
     new_line = {action_key: action_value}
-    from memory_pool import pool
-    pool.append(new_line)
+    from memory_pool import pool_queue
+    pool_queue.append(new_line)
     print('pool was appended')
     print('...out of in reward_the_Miner fn )')
     time.sleep(1.0)

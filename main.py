@@ -36,10 +36,10 @@ if __name__ == '__main__':
             blockIdx=head[1],
             action_info=['Initial block', second_part])
     
-    from show_CHAIN import draw
+    from show_CHAIN import draw_Chain
     
     while True:
-        draw()
+        draw_Chain()
         act = input('Action - "0" -- Auto action,\n'
                     '       - "1" -- User registration,\n'
                     '       - "2" -- Transaction,\n'
@@ -52,4 +52,4 @@ if __name__ == '__main__':
         elif res == 1:
             continue
     print('====================')
-    draw()
+    draw_Chain()

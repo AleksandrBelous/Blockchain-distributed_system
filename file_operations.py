@@ -18,7 +18,7 @@ def save_new_Action_to_File(lineIdx, blockIdx, action_info):
 def save_Block_in_File(block, lineIdx, blockIdx):
     file_name = new_file_name(lineIdx, blockIdx)
     with open(file_name, 'w') as f:
-        for k, v in block.items( ):
+        for k, v in block.items():
             f.write(k)
             f.write(' ')
             f.write(v)
