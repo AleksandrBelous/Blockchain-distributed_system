@@ -1,5 +1,4 @@
-previous block-0-0's hash : d6146fb403b0afefbf08d404e3e14c1c
-addition : b +1 2022-12-28 19:37:15.046824
-transaction : b a 1 2022-12-28 19:37:27.248238
-debiting : b -1 2022-12-28 19:37:27.248238
-nonce : mlcnfa
+previous block-0-0's hash : b460c54d02dee378c797b6a3568084f9
+action : information 3 2023-01-12 21:20:02.457435
+action : information 1 2023-01-12 21:20:20.189920
+action : information 2 2023-01-12 21:20:22.425365

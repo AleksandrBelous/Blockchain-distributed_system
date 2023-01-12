@@ -1,6 +1,8 @@
 #
 
 import datetime
+import time
+
 from main_chain import chain, head, operations_limit  # , update_Tail
 from checkers import *
 from users import names, show_Names  # , reward_the_Miner
@@ -15,11 +17,11 @@ def action_to_String_with_Time_Mark(act_info_second_part):
     res = ''
     for e in act_info_second_part:
         res += e + ' '
-    res += str(datetime.datetime.today( ))
+    res += str(datetime.datetime.today())
     return res
 
 
-def find_Place_for_New_Action( ):
+def find_Place_for_New_Action():
     print('( in find_Place_for_New_Action fn...')
     # fixing the root level
     cur_level_idx = head[0]
@@ -33,7 +35,7 @@ def find_Place_for_New_Action( ):
         print(f'num of block in lev {i} is {num_of_blocks}')
         for j in range(num_of_blocks):
             print(f'try to put at {i}-{j}, space: {1 + operations_limit - len(chain[i][j])}, need: {required_space}')
-            if is_Enough_Space_in_Block(i, j, required_space = required_space):
+            if is_Enough_Space_in_Block(i, j, required_space=required_space):
                 was_found = True
                 # alternative
                 # put here
@@ -44,20 +46,20 @@ def find_Place_for_New_Action( ):
                 while True:
                     if len(pool) == 0:
                         break
-                    show_Pool( )
+                    show_Pool()
                     dict_line = pool[0]
                     cur_block.append(dict_line)
                     # count += 1
                     print(f'puts {dict_line}')
                     action_key = action_value = None
-                    for k, v in dict_line.items( ):
+                    for k, v in dict_line.items():
                         action_key, action_value = k, v
                     # save to file
                     from file_operations import save_new_Action_to_File
                     save_new_Action_to_File(
-                            lineIdx = i,
-                            blockIdx = j,
-                            action_info = [action_key, action_value])
+                            lineIdx=i,
+                            blockIdx=j,
+                            action_info=[action_key, action_value])
                     pool.pop(0)
                     if not is_Enough_Space_in_Block(i, j, 1) or len(pool) == 0:
                         break
@@ -90,19 +92,19 @@ def find_Place_for_New_Action( ):
         while True:
             if len(pool) == 0:
                 break
-            show_Pool( )
+            show_Pool()
             dict_line = pool[0]
             cur_block.append(dict_line)
             # count += 1
             action_key = action_value = None
-            for k, v in dict_line.items( ):
+            for k, v in dict_line.items():
                 action_key, action_value = k, v
             # save to file
             from file_operations import save_new_Action_to_File
             save_new_Action_to_File(
-                    lineIdx = cur_level_idx,
-                    blockIdx = new_block_idx,
-                    action_info = [action_key, action_value])
+                    lineIdx=cur_level_idx,
+                    blockIdx=new_block_idx,
+                    action_info=[action_key, action_value])
             pool.pop(0)
             if not is_Enough_Space_in_Block(cur_level_idx, new_block_idx, 1) or len(pool) == 0:
                 break
@@ -120,34 +122,40 @@ def find_Place_for_New_Action( ):
             # find nonce, do not close block
     
     if was_awarded or len(pool) != 0:
-        find_Place_for_New_Action( )
+        find_Place_for_New_Action()
     print('...out of find_Place_for_New_Action fn )')
-    show_Pool( )
+    show_Pool()
 
 
 def prepare_NEW_Action(act_info):
     """Will change the chain's block that is <class 'list'>"""
     # add new action
     action_key = act_info[0]
-    action_value = action_to_String_with_Time_Mark(act_info_second_part = act_info[1:])
-    new_line = { action_key: action_value }
+    action_value = action_to_String_with_Time_Mark(act_info_second_part=act_info[1:])
+    new_line = {action_key: action_value}
     pool.append(new_line)
     # addition if action is transaction
     if action_key == 'transaction':
-        info = action_value.split(sep = ' ')
+        info = action_value.split(sep=' ')
         sender, recipient, money = info[0], info[1], info[2]
-        debiting_info = sender + ' -' + money + ' ' + str(datetime.datetime.today( ))
-        new_line = { 'debiting': debiting_info }
+        debiting_info = sender + ' -' + money + ' ' + str(datetime.datetime.today())
+        new_line = {'debiting': debiting_info}
         pool.append(new_line)
-        addition_info = recipient + ' +' + money + ' ' + str(datetime.datetime.today( ))
-        new_line = { 'addition': addition_info }
+        addition_info = recipient + ' +' + money + ' ' + str(datetime.datetime.today())
+        new_line = {'addition': addition_info}
         pool.append(new_line)
     
-    find_Place_for_New_Action( )
+    find_Place_for_New_Action()
 
 
 def choose_Action(act):
-    if act == '1':
+    if act == '0':
+        # auto action
+        from random import randint
+        for i in range(randint(1, operations_limit)):
+            info = ['action', f'information {i + 1}']
+            prepare_NEW_Action(act_info=info)
+    elif act == '1':
         # user registration
         print('+ + + REGISTRATION + + +')
         name = input('>>> Name: ')
@@ -157,11 +165,11 @@ def choose_Action(act):
         if name not in names:
             names.append(name)
         info = ['registration', name + ' 1000']
-        prepare_NEW_Action(act_info = info)
+        prepare_NEW_Action(act_info=info)
     elif act == '2':
         # transaction
         print(' > > > TRANSACTION > > >')
-        show_Names( )
+        show_Names()
         sender = input('>>> Sender: ')
         if not is_User_Exists(sender):
             print(f'>>> The user <{sender}> does not exist')
@@ -175,7 +183,7 @@ def choose_Action(act):
             print(f'>>> The user <{sender}> does not have enough money')
             return 1
         info = ['transaction', sender, recipient, transfer_amount]
-        prepare_NEW_Action(act_info = info)
+        prepare_NEW_Action(act_info=info)
     elif act == '3':
         # deleting a user
         print('- - - DELETING - - -')
@@ -189,6 +197,6 @@ def choose_Action(act):
         if name in names:
             names.remove(name)
         info = ['deleting', name]
-        prepare_NEW_Action(act_info = info)
+        prepare_NEW_Action(act_info=info)
     else:
         return 0
