@@ -1,7 +1,5 @@
 #
 
-import hashlib
-
 
 def new_file_name(lineNumber, blockNumber):
     return 'blocks/block' + '-' + str(lineNumber) + '-' + str(blockNumber)

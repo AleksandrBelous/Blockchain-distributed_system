@@ -7,7 +7,7 @@ from main_chain import chain, head, operations_limit  # , update_Tail
 from checkers import *
 from users import names, show_Names  # , reward_the_Miner
 from memory_pool import pool_queue, show_Pool
-from block_checkers import is_Enough_Space_in_Block, is_Ready_to_Close_Block  # , is_Found_Nonce
+# from block_checkers import is_Enough_Space_in_Block, is_Ready_to_Close_Block  # , is_Found_Nonce
 # from block_setters import set_All_New_Actions_to_Block
 from block_operations import grow_Block_Tree  # close_Block
 from block_creators import create_New_Block_in_Level  # create_New_Level_and_Block
@@ -22,6 +22,7 @@ def action_to_String_with_Time_Mark(act_info_second_part):
 
 
 def find_Place_for_New_Action():
+    from block_checkers import is_Enough_Space_in_Block, is_Ready_to_Close_Block
     print('( in find_Place_for_New_Action fn...')
     # fixing the root level
     cur_level_idx = head[0]

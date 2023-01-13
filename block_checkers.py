@@ -3,6 +3,7 @@
 import string
 import random
 import hashlib
+import datetime
 from main_chain import chain, operations_limit, head
 
 
@@ -24,42 +25,45 @@ def is_at_Least_One_Empty_Block():
 
 
 def is_Closed_Block(levIdx, blIdx):
-    if len(chain[levIdx][blIdx]) == 1 + operations_limit + 1:
-        return True
-    else:
-        return False
+    # if len(chain[levIdx][blIdx]) == 1 + operations_limit + 1:
+    #     return True
+    # else:
+    #     return False
+    return len(chain[levIdx][blIdx]) == 1 + operations_limit + 1
 
 
 def is_Exists_Block(levIdx, blIdx):
-    if len(chain[levIdx]) > blIdx:
-        return True
-    else:
-        return False
+    # if len(chain[levIdx]) > blIdx:
+    #     return True
+    # else:
+    #     return False
+    return len(chain[levIdx]) > blIdx
 
 
-def is_Ready_to_Close_Block(levIdx = head[0], blIdx = head[1]):
-    if len(chain[levIdx][blIdx]) == 1 + operations_limit:
-        return True
-    else:
-        return False
+def is_Ready_to_Close_Block(levIdx, blIdx):  # (levIdx = head[0], blIdx = head[1]):
+    return len(chain[levIdx][blIdx]) == 1 + operations_limit
+    # if len(chain[levIdx][blIdx]) == 1 + operations_limit:
+    #     return True
+    # else:
+    #     return False
 
 
-def is_Enough_Space_in_Block_v0(levIdx, blIdx, required_space):
-    if 1 + operations_limit - len(chain[levIdx][blIdx]) >= required_space:
-        return True
-    else:
-        return False
+# def is_Enough_Space_in_Block_v0(levIdx, blIdx, required_space):
+#     if 1 + operations_limit - len(chain[levIdx][blIdx]) >= required_space:
+#         return True
+#     else:
+#         return False
 
 
 def is_Enough_Space_in_Block(levIdx, blIdx, required_space):
-    if 1 + operations_limit - len(chain[levIdx][blIdx]) >= required_space:
-        return True
-    else:
-        return False
+    # if 1 + operations_limit - len(chain[levIdx][blIdx]) >= required_space:
+    #     return True
+    # else:
+    #     return False
+    return 1 + operations_limit - len(chain[levIdx][blIdx]) >= required_space
 
 
 def try_to_Find_Nonce(levelIdx, blockIdx):
-    nonce = None
     was_found = False
     
     def random_String():
@@ -97,7 +101,11 @@ def is_Found_Nonce():
         if is_found:
             break
     print('...out of is_Found_Nonce fn )')
-    return is_found, win_i, win_j, nonce
+    
+    def action_to_String_with_Time_Mark(nonce):
+        return nonce + ' ' + str(datetime.datetime.today())
+    
+    return is_found, win_i, win_j, action_to_String_with_Time_Mark(nonce)
 
 
 def is_it_was_First_Closed_Block(win_i):
@@ -106,7 +114,8 @@ def is_it_was_First_Closed_Block(win_i):
     for j in range(lev_size):
         if is_Closed_Block(win_i, j):
             count += 1
-    if count == 1:
-        return True
-    else:
-        return False
+    # if count == 1:
+    #     return True
+    # else:
+    #     return False
+    return count == 1
